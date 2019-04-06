@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import '../model/todo.dart';
 
 class Addlist extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return AddlisState();
+    return AddlistState();
   }
 }
 
-class AddlisState extends State {
+class AddlistState extends State {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _title = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class AddlisState extends State {
                   hintText: "You know  what you could do.",
                 ),
                 keyboardType: TextInputType.text,
-                onSaved: (value) => print(value),
+                onSaved: (value) => (value),
                 validator: (value) {
                   if (value.isEmpty) {
                     return "Please input value";
@@ -43,8 +45,12 @@ class AddlisState extends State {
                 color: Theme.of(context).accentColor,
                 elevation: 4.0,
                 splashColor: Colors.blueGrey,
-                onPressed: () {
-                  _formKey.currentState.validate();
+                onPressed: () async{
+                  if (_formKey.currentState.validate()){
+                    Todo todo = Todo(title: _title.text, done: 0);
+                    await TodoProvider.db.newTodo(todo);
+                    Navigator.pop(context, "/home");
+                  };
                 },
               )
             ]),
