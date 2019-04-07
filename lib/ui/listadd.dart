@@ -24,7 +24,10 @@ class AddlistState extends State {
           key: _formKey,
           child: Center(
             child: ListView(padding: EdgeInsets.all(20.0), children: [
+
+              
               TextFormField(
+                controller: _title,
                 decoration: InputDecoration(
                   labelText: "Thing to do!!",
                   hintText: "You know  what you could do.",
@@ -37,6 +40,8 @@ class AddlistState extends State {
                   }
                 },
               ),
+
+
               RaisedButton(
                 child: Text(
                   'Save',

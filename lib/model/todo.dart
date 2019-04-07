@@ -76,11 +76,11 @@ class TodoProvider {
     return todo;
   }
 
-  getConditionTodo({int doneState}) async {
+  getConditionTodo(int done) async {
     final db = await database;
-    var res = await db.query("Todo", where: "done = ?", whereArgs: [doneState]);
+    var res = await db.query("Todo", where: "done = ?", whereArgs: [done]);
     List<Todo> undone =
-        res.isNotEmpty ? res.toList().map((todo) => Todo.fromMap(todo)) : null;
+        res.isNotEmpty ? res.map((c) => Todo.fromMap(c)).toList() : [];
     return undone;
   }
 

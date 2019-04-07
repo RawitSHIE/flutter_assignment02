@@ -36,16 +36,22 @@ class TodolistState extends State {
 
   FutureBuilder undone() {
     return FutureBuilder<dynamic>(
-      future: TodoProvider.db.getConditionTodo(doneState: 0),
+      future: TodoProvider.db.getConditionTodo(0),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data.length == 0){
+            return Center(
+              child: Text("No data found.."),
+            );
+          }
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
               Todo item = snapshot.data[index];
               return ListTile(
                 title: Text(item.title),
-                leading: Text(item.id.toString()),
+                leading: Text("${index+1}"),
+                subtitle: Text("Task ID. ${item.id}"),
                 trailing: Checkbox(
                   onChanged: (bool value) {
                     TodoProvider.db.updateDoneState(todo: item);
@@ -65,16 +71,21 @@ class TodolistState extends State {
 
   FutureBuilder done() {
     return FutureBuilder<dynamic>(
-      future: TodoProvider.db.getConditionTodo(doneState: 1),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
+      future: TodoProvider.db.getConditionTodo(1),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snap1) {
+        if (snap1.hasData) {
+          if (snap1.data.length == 0){
+            return Center(
+              child: Text("No data found.."),
+            );
+          }
           return ListView.builder(
-            itemCount: snapshot.data.length,
+            itemCount: snap1.data.length,
             itemBuilder: (BuildContext context, int index) {
-              Todo item = snapshot.data[index];
+              Todo item = snap1.data[index];
               return ListTile(
                 title: Text(item.title),
-                leading: Text(item.id.toString()),
+                leading: Text("${index+1}"),
                 trailing: Checkbox(
                   onChanged: (bool value) {
                     TodoProvider.db.updateDoneState(todo: item);
@@ -92,16 +103,9 @@ class TodolistState extends State {
     );
   }
 
-  Container completeview() {
-    return Container(
-        padding: EdgeInsets.all(8),
-        child: Center(
-          child: Column(),
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
+    // page list
     final List<Widget> _children = [undone(), done()];
     final List topbar = <Widget>[
       IconButton(
@@ -113,20 +117,23 @@ class TodolistState extends State {
       ),
       IconButton(
         icon: Icon(Icons.delete),
-        onPressed: () {
-          TodoProvider.db.deleteDoneTodo();
+        onPressed: () async{
+          await TodoProvider.db.deleteDoneTodo();
+          setState(() {
+          });
         },
       )
     ];
 
+
+
     // TODO: implement build
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text("Todo List"),
         actions: <Widget>[topbar[_index]],
       ),
       body: Center(child: _children[_index]),
-      // body:
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         items: [
