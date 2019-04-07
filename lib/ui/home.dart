@@ -17,8 +17,9 @@ class TodolistState extends State {
     return ListTile(
       title: Text(item.title),
       leading: Text("${index + 1}"),
-      subtitle: Text("Task ID. ${item.id}"),
+      // subtitle: Text("Task ID. ${item.id}"),
       trailing: Checkbox(
+        activeColor: Colors.blue,
         onChanged: (bool value) {
           TodoProvider.db.updateDoneState(todo: item);
           setState(() {});
@@ -39,6 +40,7 @@ class TodolistState extends State {
             );
           }
           return ListView.builder(
+            padding: EdgeInsets.all(8),
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
               Todo item = snapshot.data[index];
