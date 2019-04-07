@@ -16,7 +16,7 @@ class TodolistState extends State {
   ListTile customCheckBox({Todo item, int index}) {
     return ListTile(
       title: Text(item.title),
-      leading: Text("${index + 1}"),
+      // leading: Text("${index + 1}"),
       // subtitle: Text("Task ID. ${item.id}"),
       trailing: Checkbox(
         activeColor: Colors.blue,
