@@ -18,7 +18,7 @@ class AddlistState extends State {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text("Add Todo"),
+          title: Text("New Subject"),
         ),
         body: Form(
           key: _formKey,
@@ -27,7 +27,7 @@ class AddlistState extends State {
               TextFormField(
                 controller: _title,
                 decoration: InputDecoration(
-                  labelText: "Thing to do!!",
+                  labelText: "Subject",
                   hintText: "Keep Track your tasks.",
                 ),
                 keyboardType: TextInputType.text,

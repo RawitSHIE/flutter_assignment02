@@ -44,7 +44,16 @@ class TodolistState extends State {
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
               Todo item = snapshot.data[index];
-              return customCheckBox(item: item, index: index);
+              return Card(
+                child: Column(
+                  children: <Widget>[
+                    customCheckBox(item: item, index: index),
+                    // Divider(
+                    //   color: Colors.black,
+                    // )
+                  ],
+                ),
+              );
             },
           );
         } else {
@@ -81,7 +90,7 @@ class TodolistState extends State {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Todo List"),
+        title: Text("Todo"),
         actions: <Widget>[topbar[_index]],
       ),
       body: Center(child: _children[_index]),

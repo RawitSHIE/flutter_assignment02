@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 final String _tableName = "todo";
-final String _columnId = "id";
+final String _columnId = "_id";
 final String _columnTitle = "title";
 final String _columnDone = "done";
 
