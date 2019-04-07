@@ -64,8 +64,8 @@ class TodoProvider {
         onCreate: (Database db, int version) async {
       await db.execute("CREATE TABLE $_tableName ("
           "$_columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "$_columnTitle TEXT,"
-          "$_columnDone INTEGER"
+          "$_columnTitle TEXT NOT NULL,"
+          "$_columnDone INTEGER NOT NULL"
           ")");
     });
   }
