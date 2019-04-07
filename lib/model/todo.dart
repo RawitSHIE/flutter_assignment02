@@ -5,6 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
+final String _tableName = "todo";
+final String _columnId = "id";
+final String _columnTitle = "title";
+final String _columnDone = "done";
+
 Todo todoFromMap(String str) {
   final jsonData = json.decode(str);
   return Todo.fromMap(jsonData);
@@ -27,15 +32,15 @@ class Todo {
   });
 
   factory Todo.fromMap(Map<String, dynamic> todo) => new Todo(
-        id: todo["id"],
-        title: todo["title"],
-        done: todo["done"],
+        id: todo[_columnId],
+        title: todo[_columnTitle],
+        done: todo[_columnDone],
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "title": title,
-        "done": done,
+        _columnId: id,
+        _columnTitle: title,
+        _columnDone: done,
       };
 }
 
@@ -54,13 +59,13 @@ class TodoProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "Todo.db");
+    String path = join(documentsDirectory.path, "todo.db");
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE Todo ("
-          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "title TEXT,"
-          "done INTEGER"
+      await db.execute("CREATE TABLE $_tableName ("
+          "$_columnId INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "$_columnTitle TEXT,"
+          "$_columnDone INTEGER"
           ")");
     });
   }
@@ -69,24 +74,25 @@ class TodoProvider {
     final db = await database;
     // var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM Todo");
     var todo = await db.rawInsert(
-        "INSERT Into Todo (title, done)"
+        "INSERT Into $_tableName ($_columnTitle, $_columnDone)"
         "VALUES(?,?)",
-        [ newTodo.title, newTodo.done]);
+        [newTodo.title, newTodo.done]);
     print(newTodo.title);
     return todo;
   }
 
   getConditionTodo(int done) async {
     final db = await database;
-    var res = await db.query("Todo", where: "done = ?", whereArgs: [done]);
+    var res = await db
+        .query(_tableName, where: "$_columnDone = ?", whereArgs: [done]);
     List<Todo> undone =
         res.isNotEmpty ? res.map((c) => Todo.fromMap(c)).toList() : [];
     return undone;
   }
 
-  getAll() async{
+  getAll() async {
     final db = await database;
-    var res = await db.query("Todo");
+    var res = await db.query(_tableName);
     List<Todo> list =
         res.isNotEmpty ? res.map((c) => Todo.fromMap(c)).toList() : [];
     return list;
@@ -97,21 +103,21 @@ class TodoProvider {
     Todo updated = Todo(
       id: todo.id,
       title: todo.title,
-      done: todo.done == 1? 0 : 1,
+      done: todo.done == 1 ? 0 : 1,
     );
 
-    var res = await db
-        .update("Todo", updated.toMap(), where: "id = ?", whereArgs: [todo.id]);
+    var res = await db.update(_tableName, updated.toMap(),
+        where: "$_columnId = ?", whereArgs: [todo.id]);
     return res;
   }
 
   deleteDoneTodo() async {
     final db = await database;
-    db.delete("Todo", where: "done = ?", whereArgs: [1]);
+    db.delete(_tableName, where: "$_columnDone = ?", whereArgs: [1]);
   }
 
   deleteAll() async {
-    final  db = await database;
-    db.rawDelete("Delete * from Todo");
+    final db = await database;
+    db.rawDelete("Delete * from $_tableName");
   }
 }

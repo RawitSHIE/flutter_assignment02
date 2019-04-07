@@ -18,30 +18,26 @@ class AddlistState extends State {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text("Create list"),
+          title: Text("Add Todo"),
         ),
         body: Form(
           key: _formKey,
           child: Center(
             child: ListView(padding: EdgeInsets.all(20.0), children: [
-
-              
               TextFormField(
                 controller: _title,
                 decoration: InputDecoration(
                   labelText: "Thing to do!!",
-                  hintText: "You know  what you could do.",
+                  hintText: "Keep Track your tasks.",
                 ),
                 keyboardType: TextInputType.text,
                 onSaved: (value) => (value),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return "Please input value";
+                    return "Please fill subject";
                   }
                 },
               ),
-
-
               RaisedButton(
                 child: Text(
                   'Save',
@@ -50,12 +46,12 @@ class AddlistState extends State {
                 color: Theme.of(context).accentColor,
                 elevation: 4.0,
                 splashColor: Colors.blueGrey,
-                onPressed: () async{
-                  if (_formKey.currentState.validate()){
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
                     Todo todo = Todo(title: _title.text, done: 0);
                     await TodoProvider.db.newTodo(todo);
                     Navigator.pop(context, "/home");
-                  };
+                  }
                 },
               )
             ]),
